@@ -4,3 +4,4 @@ class Company:
     def __init__(self, overview):
         self.market_cap = overview["MarketCapitalization"]
         self.sector = overview["Sector"]
+        self.name = overview["Name"]

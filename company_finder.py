@@ -10,7 +10,12 @@ FMP_ENDPOINT = "https://financialmodelingprep.com/api/v3"
 
 class CompanyFinder:
     def __init__(self):
-        pass
+        self.ticker_list = self.stock_screener()
+        self.viable_companies = {}
+        self.viable_ticker_list = self.get_viable_tickers(self.ticker_list)
+        print(len(self.viable_ticker_list))
+        print(self.viable_ticker_list)
+        print(self.viable_companies)
 
     def stock_screener(self):
         ticker_list = []
@@ -38,3 +43,18 @@ class CompanyFinder:
         overview = requests.get(url=f"{ALPHAV_ENDPOINT}", params=query_params).json()
         company_data = Company(overview)
         return company_data
+
+    def get_viable_tickers(self, all_tickers):
+        viable_tickers = []
+        for ticker in all_tickers:
+            try:
+                company_data = self.get_company_data(ticker)
+            except KeyError:
+                pass
+                # print(f"No data found on AlphaVantage for {ticker}")
+            else:
+                # print(company_data.market_cap)
+                viable_tickers.append(ticker)
+                self.viable_companies[ticker] = company_data.name
+
+        return viable_tickers
